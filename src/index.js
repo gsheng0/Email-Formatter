@@ -78,8 +78,8 @@ function parseTemplateFileContent(templateContent){
     let lines = templateContent.split("\n");
     let itemList = [];
     let textInputList = [];
-    const itemFormContainer = General.containerElement(["left"]);
-    const emailPreviewContainer = General.containerElement(["right"]);
+    const itemFormContainer = General.containerElement(["left_container"]);
+    const emailPreviewContainer = General.containerElement(["right_container"]);
 
     
     for(let lineNum = 1; lineNum < lines.length; lineNum++){
@@ -88,12 +88,11 @@ function parseTemplateFileContent(templateContent){
         while(line.indexOf("{", index) !== -1){
             let leftBracketIndex = line.indexOf("{", index);
             let rightBracketIndex = line.indexOf("}", index);
-            if(rightBracketIndex == -1){
+            if(rightBracketIndex === -1){
                 break;
             }
             
             let itemName = line.substring(leftBracketIndex + 1, rightBracketIndex).trim();
-            console.log("Item: " + itemName);
             if(!itemList.includes(itemName)){
                 itemList.push(itemName);
             }
@@ -106,9 +105,13 @@ function parseTemplateFileContent(templateContent){
     itemFormContainer.appendChild(General.textElement("h5", "Text Fields"));
 
     for(let i = 0; i < itemList.length; i++){
-        console.log("items[" + i + "] " + itemList[i]);
-        textInputList[i] = General.inputElement(itemList[i]);
+        itemFormContainer.appendChild(General.lineBreak());
+        let itemName = capitalize(itemList[i]);
+        let label = General.textElement("h6", capitalize(itemName));
+        textInputList[i] = General.inputElement(itemName);
+        itemFormContainer.appendChild(label);
         itemFormContainer.appendChild(textInputList[i]);
+        
         textInputList[i].onchange = function(event){
             updateEmailPreview(emailPreviewContainer, templateContent, itemList, textInputList);
         }
@@ -118,10 +121,39 @@ function parseTemplateFileContent(templateContent){
     updateEmailPreview(emailPreviewContainer, templateContent, itemList, textInputList);
 }
 
+function capitalize(string){
+    const notCapitalizedList = ["to", "an", "is", "a", "the", "as", "so", "than", "but", "that", "for", "till", "if", "when", "nor", "yet", "once", "or"];
+    string = string.trim();
+    //always capitalize first word
+    let out = string.substring(0, 1).toUpperCase() + string.substring(1, string.indexOf(" "));
+    
+    let index = string.indexOf(" ") + 1;
+    while(index !== 0){ //while there are still other words left 
+        let endIndex = string.indexOf(" ", index);
+        if(endIndex === -1){
+            endIndex = string.length;
+        }
+        let currentWord = string.substring(index, endIndex);
+        out += " ";
+        if(notCapitalizedList.includes(currentWord)){
+            out += currentWord;
+        }
+        else{
+            out += currentWord.substring(0, 1).toUpperCase() + currentWord.substring(1);
+        }
+        
+        index = string.indexOf(" ", index) + 1;
+    }
+
+    return out;
+}
+
 function updateEmailPreview(emailPreviewContainer, templateContent, itemList, textInputList){
     while(emailPreviewContainer.firstChild){
         emailPreviewContainer.removeChild(emailPreviewContainer.firstChild);
     }
+    emailPreviewContainer.appendChild(General.textElement("h5", "Email Preview"));
+    emailPreviewContainer.appendChild(General.lineBreak());
     for(let i = 0; i < textInputList.length; i++){
         if(!textInputList[i].value.trim().valueOf() == ""){
             templateContent = templateContent.replaceAll("{" + itemList[i] + "}", textInputList[i].value);
@@ -134,8 +166,5 @@ function updateEmailPreview(emailPreviewContainer, templateContent, itemList, te
     for(let i = 1; i < lines.length; i++){
         emailPreviewContainer.appendChild(General.textElement("p", lines[i]));
     }
-
-    
-
 }
 init();
