@@ -158,13 +158,17 @@ function capitalize(string){
 }
 
 function updateEmailPreview(emailPreviewContainer, templateContent, itemList, textInputList){
+    console.log("updated");
     while(emailPreviewContainer.firstChild){
         emailPreviewContainer.removeChild(emailPreviewContainer.firstChild);
     }
     emailPreviewContainer.appendChild(General.textElement("h5", "Email Preview"));
     emailPreviewContainer.appendChild(General.lineBreak());
     for(let i = 0; i < textInputList.length; i++){
-        if(!textInputList[i].value.trim().valueOf() === ""){
+        console.log("Remaking elements");
+        console.log("Text Input Value: " + textInputList[i].value);
+        if(!(textInputList[i].value.trim().valueOf() === "")){
+            console.log("Replacing " + itemList[i] + " with " + textInputList[i].value);
             templateContent = templateContent.replaceAll("{" + itemList[i] + "}", textInputList[i].value);
         }
     }
@@ -183,12 +187,15 @@ function downloadEmailDraft(emailPreviewContainer){
         let currentElement = childElements[i];
         let tag = currentElement.tagName;
         if(tag.valueOf() === "P"){
+            emailString = emailString + "<p>" + currentElement.textContent + "<p>\n";
             
         } else if(tag.valueOf() === "H6"){
             emailString = emailString + currentElement.textContent + "\nX-Unsent: 1\nContent-Type: text/html\n\n<html>\n<body>\n";
         }
-
+        console.log(emailString);
     }
+    emailString = emailString + "</body>\n</html>\n";
+    download(emailString, "email.emltpl");
 }
 //download("Subject: Test EML message\nX-Unsent: 1\nContent-Type: text/html\n\n<html>\n<body>\nTest message with <b>bold</b> text.\n</body>\n</html>", "test.emltpl");
 init();
