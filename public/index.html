@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <style>
+        .code{
+            color: black;
+            background-color: transparent;
+        }
+        .border{
+            border-style: solid;
+            border-color: black;
+            border-width: 1px;
+        }
+        .article-preview:hover{
+            color: darkgrey;
+        }
+        .article-preview:active{
+            color:grey;
+        }
+    #content{
+        padding: 40px;
+        height: auto;
+        overflow: auto;
+        float: none;
+    }
+    #title{
+        padding: 0px 40px;
+    }
+    .left {
+        width: 20%;
+        float: left;
+        padding: 0px 40px 40px 0px;
+    }
+    .right {
+        width: 80%;
+        float: right;
+        padding: 0px 40px 40px 40px;
+    }
+    </style>
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>Knowledge Base</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item px-2">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit"id="write">Write Email</button>
+                </li>
+                <li class="nav-item px-2">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit"id="create">Create Template</button>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        <div id="main" class="container border" style="padding-top: 40px; padding-bottom: 40px; margin-bottom: 200px;">
+            <div id="title">
+                
+            </div>
+            <div id="content">
+            </div>
+        </div>
+    </div>
+    
+  </body>
+</html>
