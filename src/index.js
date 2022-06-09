@@ -1,5 +1,6 @@
 import {General} from "./util.js"
 
+
 const titleContainer = document.getElementById("title");
 const contentContainer = document.getElementById("content");
 
@@ -18,7 +19,7 @@ function writeEmailPage(){
     templateFileInput.onchange = function(event){
         const reader = new FileReader();
         reader.onload = function(){
-            console.log(reader.result);
+            General.clearElement("content");
             parseTemplateFileContent(reader.result);
         }
         reader.readAsText(templateFileInput.files[0]);
@@ -107,7 +108,7 @@ function parseTemplateFileContent(templateContent){
     for(let i = 0; i < itemList.length; i++){
         itemFormContainer.appendChild(General.lineBreak());
         let itemName = capitalize(itemList[i]);
-        let label = General.textElement("h6", capitalize(itemName));
+        let label = General.textElement("h6", itemName);
         textInputList[i] = General.inputElement(itemName);
         itemFormContainer.appendChild(label);
         itemFormContainer.appendChild(textInputList[i]);
@@ -117,6 +118,12 @@ function parseTemplateFileContent(templateContent){
         }
 
     }
+    itemFormContainer.appendChild(General.lineBreak());
+    let downloadButton = General.buttonElement("Download Email");
+    itemFormContainer.appendChild(downloadButton);
+    downloadButton.onclick = function(event){
+        downloadEmailDraft(emailPreviewContainer);
+    }
 
     updateEmailPreview(emailPreviewContainer, templateContent, itemList, textInputList);
 }
@@ -125,7 +132,11 @@ function capitalize(string){
     const notCapitalizedList = ["to", "an", "is", "a", "the", "as", "so", "than", "but", "that", "for", "till", "if", "when", "nor", "yet", "once", "or"];
     string = string.trim();
     //always capitalize first word
-    let out = string.substring(0, 1).toUpperCase() + string.substring(1, string.indexOf(" "));
+    let endIndex = string.indexOf(" ");
+    if(endIndex === -1){
+        endIndex = string.length;
+    }
+    let out = string.substring(0, 1).toUpperCase() + string.substring(1, endIndex);
     
     let index = string.indexOf(" ") + 1;
     while(index !== 0){ //while there are still other words left 
@@ -141,10 +152,8 @@ function capitalize(string){
         else{
             out += currentWord.substring(0, 1).toUpperCase() + currentWord.substring(1);
         }
-        
         index = string.indexOf(" ", index) + 1;
     }
-
     return out;
 }
 
@@ -155,9 +164,8 @@ function updateEmailPreview(emailPreviewContainer, templateContent, itemList, te
     emailPreviewContainer.appendChild(General.textElement("h5", "Email Preview"));
     emailPreviewContainer.appendChild(General.lineBreak());
     for(let i = 0; i < textInputList.length; i++){
-        if(!textInputList[i].value.trim().valueOf() == ""){
+        if(!textInputList[i].value.trim().valueOf() === ""){
             templateContent = templateContent.replaceAll("{" + itemList[i] + "}", textInputList[i].value);
-            
         }
     }
     let lines = templateContent.split("\n");
@@ -167,4 +175,20 @@ function updateEmailPreview(emailPreviewContainer, templateContent, itemList, te
         emailPreviewContainer.appendChild(General.textElement("p", lines[i]));
     }
 }
+
+function downloadEmailDraft(emailPreviewContainer){
+    let childElements = emailPreviewContainer.childNodes;
+    let emailString = "Subject: ";
+    for(let i = 0; i < childElements.length; i++){
+        let currentElement = childElements[i];
+        let tag = currentElement.tagName;
+        if(tag.valueOf() === "P"){
+            
+        } else if(tag.valueOf() === "H6"){
+            emailString = emailString + currentElement.textContent + "\nX-Unsent: 1\nContent-Type: text/html\n\n<html>\n<body>\n";
+        }
+
+    }
+}
+//download("Subject: Test EML message\nX-Unsent: 1\nContent-Type: text/html\n\n<html>\n<body>\nTest message with <b>bold</b> text.\n</body>\n</html>", "test.emltpl");
 init();

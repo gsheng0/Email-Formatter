@@ -1,0 +1,9 @@
+Subject: Test EML message
+X-Unsent: 1
+Content-Type: text/html
+
+<html>
+<body>
+Test message with <b>bold</b> text.
+</body>
+</html>
