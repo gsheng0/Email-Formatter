@@ -1,11 +1,13 @@
-import {General} from "./util.js"
-
+import {General} from "./util.js";
+//import independentsoftMsg from 'https://cdn.skypack.dev/@independentsoft/msg';
 
 const titleContainer = document.getElementById("title");
 const contentContainer = document.getElementById("content");
 
+
 function init(){
     document.getElementById("write").addEventListener("click", writeEmailPage);
+    document.getElementById("writeEmails").addEventListener("click", writeMultipleEmailsPage);
     document.getElementById("create").addEventListener("click", createTemplatePage);
     writeEmailPage();
 }
@@ -13,14 +15,15 @@ function init(){
 function writeEmailPage(){
     clearPage();
     titleContainer.appendChild(General.textElement("h1", "Write an Email"));
-    const templateFileInput = General.inputFile();
+    const templateFileInput = General.fileInputElement("Choose Template File");
 
+    titleContainer.appendChild(General.lineBreak());
     titleContainer.appendChild(templateFileInput);
     templateFileInput.onchange = function(event){
         const reader = new FileReader();
         reader.onload = function(){
             General.clearElement("content");
-            parseTemplateFileContent(reader.result);
+            parseTemplateFileContentForSingleEmail(reader.result);
         }
         reader.readAsText(templateFileInput.files[0]);
         console.log(templateFileInput.files[0]);
@@ -28,11 +31,28 @@ function writeEmailPage(){
 
 }
 
+function writeMultipleEmailsPage(){
+    clearPage();
+    titleContainer.appendChild(General.textElement("h1", "Write Multiple Emails"));
+    const templateFileInput = General.fileInputElement("Choose Template File");
+    
+    titleContainer.appendChild(General.lineBreak());
+    titleContainer.appendChild(templateFileInput);
+    templateFileInput.onchange = function(event){
+        const reader = new FileReader();
+        reader.onload = function(){
+            General.clearElement("content");
+            
+        }
+    }
+
+}
+
 function createTemplatePage(){
     clearPage();
     titleContainer.appendChild(General.textElement("h1", "Create a Template"));
-    const templateNameInput = General.inputElement("Template Name");
-    const templateSubjectLine = General.inputElement("Subject");
+    const templateNameInput = General.textInputElement("Template Name");
+    const templateSubjectLine = General.textInputElement("Subject");
     const templateBodyInput = General.textAreaElement("Template Body");
     const createButton = General.buttonElement("Create");
 
@@ -75,7 +95,7 @@ function download(data, filename) {
     }
 }
 
-function parseTemplateFileContent(templateContent){
+function parseTemplateFileContentForSingleEmail(templateContent){
     let lines = templateContent.split("\n");
     let itemList = [];
     let textInputList = [];
@@ -109,7 +129,7 @@ function parseTemplateFileContent(templateContent){
         itemFormContainer.appendChild(General.lineBreak());
         let itemName = capitalize(itemList[i]);
         let label = General.textElement("h6", itemName);
-        textInputList[i] = General.inputElement(itemName);
+        textInputList[i] = General.textInputElement(itemName);
         itemFormContainer.appendChild(label);
         itemFormContainer.appendChild(textInputList[i]);
         
@@ -158,17 +178,13 @@ function capitalize(string){
 }
 
 function updateEmailPreview(emailPreviewContainer, templateContent, itemList, textInputList){
-    console.log("updated");
     while(emailPreviewContainer.firstChild){
         emailPreviewContainer.removeChild(emailPreviewContainer.firstChild);
     }
     emailPreviewContainer.appendChild(General.textElement("h5", "Email Preview"));
     emailPreviewContainer.appendChild(General.lineBreak());
     for(let i = 0; i < textInputList.length; i++){
-        console.log("Remaking elements");
-        console.log("Text Input Value: " + textInputList[i].value);
         if(!(textInputList[i].value.trim().valueOf() === "")){
-            console.log("Replacing " + itemList[i] + " with " + textInputList[i].value);
             templateContent = templateContent.replaceAll("{" + itemList[i] + "}", textInputList[i].value);
         }
     }
@@ -197,5 +213,5 @@ function downloadEmailDraft(emailPreviewContainer){
     emailString = emailString + "</body>\n</html>\n";
     download(emailString, "email.emltpl");
 }
-//download("Subject: Test EML message\nX-Unsent: 1\nContent-Type: text/html\n\n<html>\n<body>\nTest message with <b>bold</b> text.\n</body>\n</html>", "test.emltpl");
+
 init();

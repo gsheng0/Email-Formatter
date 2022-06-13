@@ -29,18 +29,18 @@ export class General{
         return container;
     }
 
-    static inputElement(placeHolder){
+    static textInputElement(placeHolder){
         let input = document.createElement("input");
         input.classList.add("form-control");
         input.placeholder = placeHolder;
         return input;
     }
 
-    static inputFile(){
+    static fileInputElement(placeHolder){
         let input = document.createElement("input");
         input.type = "file";
+        input.placeholder = placeHolder;
         return input;
-
     }
 
     static textAreaElement(placeHolder){

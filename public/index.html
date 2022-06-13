@@ -38,6 +38,7 @@
     #root{
         display: flex;
         flex-direction: column;
+        margin: 0px 200px 0px;
     }
     .left{
         float: left;
@@ -54,6 +55,17 @@
         width: 80%;
         float: right;
         padding: 0px 40px 40px 40px;
+    }
+    .btn:hover, .btn:active, .btn:visited {
+        background-color: black !important;
+        color: white !important;
+    }
+    .btn:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25) !important;
+    } 
+    .btn{
+        color: black !important;
+        border-color: black !important;
     }
     </style>
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
@@ -72,6 +84,9 @@
               <ul class="navbar-nav">
                 <li class="nav-item px-2">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit"id="write">Write Email</button>
+                </li>
+                <li class="nav-item px-2">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit"id="writeEmails">Write Multiple Emails</button>
                 </li>
                 <li class="nav-item px-2">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit"id="create">Create Template</button>
